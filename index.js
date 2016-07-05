@@ -7,7 +7,7 @@ authService.factory("authService", function () {
 });
 
 authService.factory("authServiceInterface", function ($q) {
-    return function(){
+    return function authFunction(){
         var token;
         function login(){
             token = "bearer 0123456789"
@@ -20,6 +20,8 @@ authService.factory("authServiceInterface", function ($q) {
         function getHttpContext() {
             return $q({headers: {'Authorization': token}})
         }
+
+        return authFunction;
     }
 });
 
