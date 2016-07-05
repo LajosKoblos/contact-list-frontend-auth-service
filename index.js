@@ -1,38 +1,49 @@
 var authService = angular.module("authServiceModule", []);
+authService.factory("$httpWithProtection", function ($http, authService) {
+    var http = function (config) {
+        config.headers.Authorization = "Bearer " + authService.getTokenId();
+        return $http(config);
+    };
+    return http;
+});
 
-authService.factory("authService", function ($http) {
-    return function(){
-        var token;
-        function login(userName, password){
-            $http({
-                method: 'POST',
-                url: 'localhost:8080/login',
-                data: {"userName": userName, "password": password}
-            }).then(function(data, status, headers){
-                token = headers("Authorization");
-            });
-        };
+authService.factory("authService", function ($http, $q) {
+    var token;
 
-        function logout(){
-            token = "";
-        };
+    function login(userName, password) {
+        var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: 'http://localhost:8080/login',
+            data: {"userName": userName, "password": password}
+        }).then(function (data) {
+            token = data.data.tokenId;
+            deferred.resolve();
+        });
 
-        function getHttpContext() {
-            return $http({headers: {'Authorization': token}})
-        }
+        return deferred.promise;
+    };
 
-        return {login: login, logout: logout, getHttpContext: getHttpContext};
-    }
+    function getTokenId(){
+        return token;
+    };
+
+    function logout() {
+        token = null;
+    };
+
+    return {login: login, logout: logout, getTokenId: getTokenId};
 });
 
 authService.factory("authServiceInterface", function ($q) {
-    return function authFunction(){
+    return function authFunction() {
         var token;
-        function login(){
+
+        function login() {
             token = "bearer 0123456789"
         };
 
-        function logout(){
+        function logout() {
             token = "";
         };
 
