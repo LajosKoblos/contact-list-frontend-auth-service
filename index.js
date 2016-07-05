@@ -6,7 +6,7 @@ authService.factory("authService", function () {
     }
 });
 
-authService.factory("authServiceInterface", function ($http) {
+authService.factory("authServiceInterface", function ($q) {
     return function(){
         var token;
         function login(){
@@ -18,7 +18,7 @@ authService.factory("authServiceInterface", function ($http) {
         };
 
         function getHttpContext() {
-            return $http({headers: {'Authorization': token}})
+            return $q({headers: {'Authorization': token}})
         }
     }
 });
