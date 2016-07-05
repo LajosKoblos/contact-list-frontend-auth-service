@@ -1,6 +1,7 @@
 var authService = angular.module("authServiceModule", []);
 authService.factory("$httpWithProtection", function ($http, authService) {
     var http = function (config) {
+        config.headers = {};
         config.headers.Authorization = "Bearer " + authService.getTokenId();
         return $http(config);
     };
