@@ -1,4 +1,5 @@
 var authService = angular.module("authServiceModule", []);
+
 authService.factory("$httpWithProtection", function ($http, authService) {
     var http = function (config) {
         config.headers = {};
@@ -34,25 +35,5 @@ authService.factory("authService", function ($http, $q) {
     };
 
     return {login: login, logout: logout, getTokenId: getTokenId};
-});
-
-authService.factory("authServiceInterface", function ($q) {
-    return function authFunction() {
-        var token;
-
-        function login() {
-            token = "bearer 0123456789"
-        };
-
-        function logout() {
-            token = "";
-        };
-
-        function getHttpContext() {
-            return $q({headers: {'Authorization': token}})
-        }
-
-        return authFunction;
-    }
 });
 
