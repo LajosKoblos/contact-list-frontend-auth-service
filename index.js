@@ -18,9 +18,9 @@ authService.factory("authService", function ($http, $q) {
             method: 'POST',
             url: 'http://localhost:8080/login',
             data: {"userName": userName, "password": password}
-        }).then(function (data) {
-            token = data.data.tokenId;
-            deferred.resolve();
+        }).then(function (result) {
+            token = result.data.tokenId;
+            deferred.resolve({tokenId: result.data.tokenId, role: result.data.role});
         });
 
         return deferred.promise;
