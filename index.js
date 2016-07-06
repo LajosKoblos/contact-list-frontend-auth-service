@@ -12,15 +12,17 @@ authService.factory("$httpWithProtection", function ($http, authService) {
 authService.factory("authService", function ($http, $q) {
     var token;
 
-    function login(userName, password) {
+    function login(userModel) {
         var deferred = $q.defer();
         $http({
             method: 'POST',
             url: 'http://localhost:8080/login',
-            data: {"userName": userName, "password": password}
+            data: userModel
         }).then(function (result) {
             token = result.data.tokenId;
             deferred.resolve({tokenId: result.data.tokenId, role: result.data.role});
+        }, function (reason) {
+            deferred.reject(reason);
         });
 
         return deferred.promise;
