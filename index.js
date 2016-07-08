@@ -27,13 +27,26 @@ authService.factory("authService", function ($http, $q) {
 
         return deferred.promise;
     };
-
+    
     function getTokenId(){
         return token;
     };
 
     function logout() {
-        token = null;
+        var deferred = $q.defer();
+        $http({
+            method: 'POST',
+            url: 'http://localhost:8080/logout',
+            data: {"tokenId" : getTokenId()}
+        }).then(function (result) {
+            deferred.resolve(result);
+            token = null;
+        }, function (reason) {
+            deferred.reject(reason);
+        });
+
+        return deferred.promise;
+
     };
 
     return {login: login, logout: logout, getTokenId: getTokenId};
