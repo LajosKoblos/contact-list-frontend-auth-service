@@ -22,7 +22,7 @@ authService.factory("authService", function ($http, $q) {
             token = result.data.tokenId;
             deferred.resolve({tokenId: result.data.tokenId, role: result.data.role});
         }, function (reason) {
-            deferred.reject(reason);
+            deferred.reject(createServerErrorObject(reason));
         });
 
         return deferred.promise;
@@ -42,12 +42,21 @@ authService.factory("authService", function ($http, $q) {
             deferred.resolve(result);
             token = null;
         }, function (reason) {
-            deferred.reject(reason);
+            deferred.reject(createServerErrorObject(reason));
         });
 
         return deferred.promise;
 
     };
+
+    function createServerErrorObject(error) {
+        return {
+            message: error.data.message,
+            status: error.status,
+            fields: error.data.fields,
+            httpResponse: error.config
+        };
+    }
 
     return {login: login, logout: logout, getTokenId: getTokenId};
 });
